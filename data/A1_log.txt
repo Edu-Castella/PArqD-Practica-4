@@ -1,0 +1,291 @@
+LOG NODE A1
+Versio 0: BUIT
+
+=== Version 1 ===
+key=10, value=100
+
+=== Version 2 ===
+key=10, value=100
+key=20, value=200
+
+=== Version 3 ===
+key=10, value=100
+key=20, value=200
+key=30, value=300
+
+=== Version 4 ===
+key=10, value=100
+key=20, value=200
+key=30, value=300
+key=40, value=400
+
+=== Version 5 ===
+key=10, value=100
+key=20, value=200
+key=30, value=300
+key=40, value=400
+key=50, value=500
+
+=== Version 6 ===
+key=10, value=100
+key=20, value=200
+key=30, value=300
+key=40, value=400
+key=50, value=500
+key=60, value=600
+
+=== Version 7 ===
+key=10, value=100
+key=20, value=200
+key=30, value=300
+key=40, value=400
+key=50, value=500
+key=60, value=600
+key=70, value=700
+
+=== Version 8 ===
+key=10, value=100
+key=20, value=200
+key=30, value=300
+key=40, value=400
+key=50, value=500
+key=60, value=600
+key=70, value=700
+key=80, value=800
+
+=== Version 9 ===
+key=10, value=100
+key=20, value=200
+key=30, value=300
+key=40, value=400
+key=50, value=500
+key=60, value=600
+key=70, value=700
+key=80, value=800
+key=90, value=900
+
+=== Version 10 ===
+key=10, value=100
+key=20, value=200
+key=30, value=300
+key=40, value=400
+key=50, value=500
+key=60, value=600
+key=70, value=700
+key=80, value=800
+key=90, value=900
+key=100, value=1000
+
+=== Version 11 ===
+key=10, value=100
+key=20, value=200
+key=30, value=300
+key=40, value=400
+key=50, value=500
+key=60, value=600
+key=70, value=700
+key=80, value=800
+key=90, value=900
+key=100, value=1000
+key=110, value=1100
+
+=== Version 12 ===
+key=10, value=100
+key=20, value=200
+key=30, value=300
+key=40, value=400
+key=50, value=500
+key=60, value=600
+key=70, value=700
+key=80, value=800
+key=90, value=900
+key=100, value=1000
+key=110, value=1100
+key=120, value=1200
+
+=== Version 13 ===
+key=10, value=100
+key=20, value=200
+key=30, value=300
+key=40, value=400
+key=50, value=500
+key=60, value=600
+key=70, value=700
+key=80, value=800
+key=90, value=900
+key=100, value=1000
+key=110, value=1100
+key=120, value=1200
+key=130, value=1300
+
+=== Version 14 ===
+key=10, value=100
+key=20, value=200
+key=30, value=300
+key=40, value=400
+key=50, value=500
+key=60, value=600
+key=70, value=700
+key=80, value=800
+key=90, value=900
+key=100, value=1000
+key=110, value=1100
+key=120, value=1200
+key=130, value=1300
+key=140, value=1400
+
+=== Version 15 ===
+key=10, value=100
+key=20, value=200
+key=30, value=300
+key=40, value=400
+key=50, value=500
+key=60, value=600
+key=70, value=700
+key=80, value=800
+key=90, value=900
+key=100, value=1500
+key=110, value=1100
+key=120, value=1200
+key=130, value=1300
+key=140, value=1400
+
+=== Version 16 ===
+key=10, value=100
+key=20, value=200
+key=30, value=300
+key=40, value=400
+key=50, value=500
+key=60, value=600
+key=70, value=700
+key=80, value=800
+key=90, value=900
+key=100, value=1500
+key=110, value=1100
+key=120, value=1200
+key=130, value=1300
+key=140, value=1400
+key=160, value=1600
+
+=== Version 17 ===
+key=10, value=100
+key=20, value=200
+key=30, value=300
+key=40, value=400
+key=50, value=500
+key=60, value=600
+key=70, value=700
+key=80, value=800
+key=90, value=900
+key=100, value=1500
+key=110, value=1100
+key=120, value=1200
+key=130, value=1300
+key=140, value=1400
+key=160, value=1600
+key=170, value=1700
+
+=== Version 18 ===
+key=10, value=100
+key=20, value=200
+key=30, value=300
+key=40, value=400
+key=50, value=500
+key=60, value=600
+key=70, value=700
+key=80, value=800
+key=90, value=900
+key=100, value=1500
+key=110, value=1100
+key=120, value=1200
+key=130, value=1300
+key=140, value=1400
+key=160, value=1600
+key=170, value=1700
+key=180, value=1800
+
+=== Version 19 ===
+key=10, value=100
+key=20, value=200
+key=30, value=300
+key=40, value=400
+key=50, value=500
+key=60, value=600
+key=70, value=700
+key=80, value=800
+key=90, value=900
+key=100, value=1500
+key=110, value=1100
+key=120, value=1200
+key=130, value=1300
+key=140, value=1400
+key=160, value=1600
+key=170, value=1700
+key=180, value=1800
+key=190, value=1900
+
+=== Version 20 ===
+key=10, value=100
+key=20, value=200
+key=30, value=300
+key=40, value=400
+key=50, value=500
+key=60, value=600
+key=70, value=700
+key=80, value=800
+key=90, value=900
+key=100, value=1500
+key=110, value=1100
+key=120, value=1200
+key=130, value=1300
+key=140, value=1400
+key=160, value=1600
+key=170, value=1700
+key=180, value=1800
+key=190, value=1900
+key=200, value=2000
+
+=== Version 21 ===
+key=10, value=100
+key=20, value=200
+key=30, value=300
+key=40, value=400
+key=50, value=500
+key=60, value=600
+key=70, value=700
+key=80, value=800
+key=90, value=900
+key=100, value=1500
+key=110, value=1100
+key=120, value=1200
+key=130, value=1300
+key=140, value=1400
+key=160, value=1600
+key=170, value=1700
+key=180, value=1800
+key=190, value=1900
+key=200, value=2000
+key=210, value=2100
+
+=== Version 22 ===
+key=10, value=100
+key=20, value=200
+key=30, value=300
+key=40, value=400
+key=50, value=500
+key=60, value=600
+key=70, value=700
+key=80, value=800
+key=90, value=900
+key=100, value=1500
+key=110, value=1100
+key=120, value=1200
+key=130, value=1300
+key=140, value=1400
+key=160, value=1600
+key=170, value=1700
+key=180, value=1800
+key=190, value=1900
+key=200, value=2000
+key=210, value=2100
+key=220, value=2200

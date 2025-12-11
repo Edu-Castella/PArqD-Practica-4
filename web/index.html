@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pràctica 4</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #667eea;
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .layer {
+            margin-bottom: 30px;
+        }
+
+        .layer-title {
+            color: white;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            padding: 10px 20px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 10px;
+            display: inline-block;
+        }
+
+        .nodes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .node-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+        }
+
+        .node-card:hover {
+            background: #F2F2F2;
+        }
+
+        .node-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .node-name {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .node-stats {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            flex: 1;
+            min-width: 100px;
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 0.8em;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .data-section {
+            margin-top: 15px;
+        }
+
+        .data-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #666;
+            font-size: 0.9em;
+            text-transform: uppercase;
+        }
+
+        .data-table {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+        }
+
+        .data-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 12px;
+            border-bottom: 1px solid #f0f0f0;
+            transition: background 0.2s;
+        }
+
+        .data-row:hover {
+            background: #f8f9fa;
+        }
+
+        .data-row:last-child {
+            border-bottom: none;
+        }
+
+        .data-key {
+            font-weight: 500;
+            color: #667eea;
+        }
+
+        .data-value {
+            color: #333;
+            font-weight: bold;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+            font-style: italic;
+        }
+
+        .last-update {
+            font-size: 0.8em;
+            color: #999;
+            margin-top: 10px;
+            text-align: right;
+        }
+
+        .data-table::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .data-table::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 8px;
+        }
+
+        .data-table::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 8px;
+        }
+
+        .data-table::-webkit-scrollbar-thumb:hover {
+            background: #5568d3;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(102, 126, 234, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(102, 126, 234, 0); }
+        }
+
+        .node-card.updated {
+            animation: pulse 0.6s;
+        }
+
+        @media (max-width: 768px) {
+            .nodes-grid {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Pràctica 4</h1>
+        </header>
+
+        <div class="layer">
+            <div class="layer-title">Core Layer (A1, A2, A3)</div>
+            <div class="nodes-grid" id="coreLayer">
+            </div>
+        </div>
+
+        <div class="layer">
+            <div class="layer-title">Layer 1 (B1, B2)</div>
+            <div class="nodes-grid" id="layer1">
+            </div>
+        </div>
+
+        <div class="layer">
+            <div class="layer-title">Layer 2 (C1, C2)</div>
+            <div class="nodes-grid" id="layer2">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let socket = null;
+        const nodes = {};
+
+        const nodeStructure = {
+            core: ['A1', 'A2', 'A3'],
+            layer1: ['B1', 'B2'],
+            layer2: ['C1', 'C2']
+        };
+
+        function initializeNodes() {
+            for (const [layer, nodeList] of Object.entries(nodeStructure)) {
+                nodeList.forEach(nodeId => {
+                    nodes[nodeId] = {
+                        layer: layer,
+                        node_id: nodeId,
+                        version: 0,
+                        update_count: 0,
+                        data: {},
+                        data_count: 0,
+                        last_update: new Date()
+                    };
+                    createNodeCard(nodes[nodeId]);
+                });
+            }
+        }
+
+        function createNodeCard(node) {
+            const layerMap = {
+                'core': 'coreLayer',
+                'layer1': 'layer1',
+                'layer2': 'layer2'
+            };
+
+            const container = document.getElementById(layerMap[node.layer]);
+            const card = document.createElement('div');
+            card.className = 'node-card';
+            card.id = `node-${node.node_id}`;
+
+            card.innerHTML = `
+                <div class="node-header">
+                    <div class="node-name">${node.node_id}</div>
+                </div>
+                <div class="node-stats">
+                    <div class="stat">
+                        <div class="stat-label">Items</div>
+                        <div class="stat-value">${node.data_count}</div>
+                    </div>
+                    ${node.layer === 'core' ? `
+                    <div class="stat">
+                        <div class="stat-label">Actualitzacions</div>
+                        <div class="stat-value">${node.update_count}</div>
+                    </div>
+                    ` : ''}
+                </div>
+                <div class="data-section">
+                    <div class="data-title">Dades</div>
+                    <div class="data-table" id="data-${node.node_id}">
+                        <div class="empty-state">No hi ha dades</div>
+                    </div>
+                </div>
+                <div class="last-update" id="time-${node.node_id}">
+                    No s'ha actualitzat
+                </div>
+            `;
+
+            container.appendChild(card);
+        }
+
+        function updateNodeCard(nodeData) {
+            const nodeId = nodeData.node_id;
+
+            nodes[nodeId] = {
+                ...nodes[nodeId],
+                ...nodeData,
+                last_update: new Date()
+            };
+
+            const card = document.getElementById(`node-${nodeId}`);
+            if (!card) return;
+
+            card.classList.add('updated');
+            setTimeout(() => card.classList.remove('updated'), 600);
+
+            const stats = card.querySelectorAll('.stat-value');
+            stats[0].textContent = nodeData.data_count;
+            if (nodeData.update_count !== undefined) {
+                stats[1].textContent = nodeData.update_count;
+            }
+
+            const dataTable = document.getElementById(`data-${nodeId}`);
+            if (Object.keys(nodeData.data).length === 0) {
+                dataTable.innerHTML = '<div class="empty-state">No hi ha dades</div>';
+            } else {
+                dataTable.innerHTML = '';
+                const sortedKeys = Object.keys(nodeData.data).sort((a, b) => parseInt(a) - parseInt(b));
+                sortedKeys.forEach(key => {
+                    const row = document.createElement('div');
+                    row.className = 'data-row';
+                    row.innerHTML = `
+                        <span class="data-key">key=${key}</span>
+                        <span class="data-value">value=${nodeData.data[key]}</span>
+                    `;
+                    dataTable.appendChild(row);
+                });
+            }
+
+            const timeEl = document.getElementById(`time-${nodeId}`);
+            timeEl.textContent = `Actualitzat: ${new Date().toLocaleTimeString()}`;
+        }
+
+        function connectSocket() {
+            socket = io();
+
+            socket.on('node_update', (data) => {
+                updateNodeCard(data);
+            });
+
+            socket.on('disconnect', () => {
+                setTimeout(connectSocket, 3000);
+            });
+        }
+
+        initializeNodes();
+        connectSocket();
+    </script>
+</body>
+</html>

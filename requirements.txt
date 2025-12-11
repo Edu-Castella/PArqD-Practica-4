@@ -1,0 +1,6 @@
+grpcio==1.70.0
+grpcio-tools==1.70.0
+protobuf
+websockets==12.0
+flask
+flask-socketio
