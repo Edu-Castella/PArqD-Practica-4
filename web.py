@@ -22,6 +22,10 @@ class FlaskWebServer:
 
     def start(self):
         def run():
+            import logging
+            log = logging.getLogger('werkzeug')
+            log.setLevel(logging.ERROR)
+
             self.socketio.run(
                 app,
                 host='0.0.0.0',
@@ -41,10 +45,5 @@ class FlaskWebServer:
 @app.route('/')
 def index():
     return render_template('index.html')
-
-
-@app.route('/<path:path>')
-def serve_static(path):
-    return send_from_directory(app.static_folder, path)
 
 flask_server = FlaskWebServer()

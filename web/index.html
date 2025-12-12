@@ -236,123 +236,80 @@
         let socket = null;
         const nodes = {};
 
-        const nodeStructure = {
-            core: ['A1', 'A2', 'A3'],
-            layer1: ['B1', 'B2'],
-            layer2: ['C1', 'C2']
+        const layers = {
+            core: 'coreLayer',
+            layer1: 'layer1',
+            layer2: 'layer2'
+        };
+
+        const nodeMap = {
+            A1:'core',
+            A2:'core',
+            A3:'core',
+            B1:'layer1',
+            B2:'layer1',
+            C1:'layer2',
+            C2:'layer2'
         };
 
         function initializeNodes() {
-            for (const [layer, nodeList] of Object.entries(nodeStructure)) {
-                nodeList.forEach(nodeId => {
-                    nodes[nodeId] = {
-                        layer: layer,
-                        node_id: nodeId,
-                        version: 0,
-                        update_count: 0,
-                        data: {},
-                        data_count: 0,
-                        last_update: new Date()
-                    };
-                    createNodeCard(nodes[nodeId]);
-                });
-            }
+            Object.keys(nodeMap).forEach(id => {
+                nodes[id] = { node_id:id, layer:nodeMap[id], data_count:0, update_count:0, data:{} };
+                const container = document.getElementById(layers[nodeMap[id]]);
+                const card = document.createElement('div');
+                card.className = 'node-card';
+                card.id = `node-${id}`;
+                card.innerHTML = `
+                    <div class="node-header"><div class="node-name">${id}</div></div>
+                    <div class="node-stats">
+                        <div class="stat"><div class="stat-label">Items</div><div class="stat-value">0</div></div>
+                        ${id[0]==='A'?'<div class="stat"><div class="stat-label">Actualitzacions</div><div class="stat-value">0</div></div>':''}
+                    </div>
+                    <div class="data-section">
+                        <div class="data-title">Dades</div>
+                        <div class="data-table" id="data-${id}"><div class="empty-state">No hi ha dades</div></div>
+                    </div>
+                    <div class="last-update" id="time-${id}">No s'ha actualitzat</div>
+                `;
+                container.appendChild(card);
+            });
         }
 
-        function createNodeCard(node) {
-            const layerMap = {
-                'core': 'coreLayer',
-                'layer1': 'layer1',
-                'layer2': 'layer2'
+        function updateNodeCard(data) {
+            const node = nodes[data.id] = {
+                ...nodes[data.id],
+                version: data.versio || 0,
+                update_count: data.count_act || 0,
+                data: data.data || {},
+                data_count: data.count_data || 0
             };
 
-            const container = document.getElementById(layerMap[node.layer]);
-            const card = document.createElement('div');
-            card.className = 'node-card';
-            card.id = `node-${node.node_id}`;
-
-            card.innerHTML = `
-                <div class="node-header">
-                    <div class="node-name">${node.node_id}</div>
-                </div>
-                <div class="node-stats">
-                    <div class="stat">
-                        <div class="stat-label">Items</div>
-                        <div class="stat-value">${node.data_count}</div>
-                    </div>
-                    ${node.layer === 'core' ? `
-                    <div class="stat">
-                        <div class="stat-label">Actualitzacions</div>
-                        <div class="stat-value">${node.update_count}</div>
-                    </div>
-                    ` : ''}
-                </div>
-                <div class="data-section">
-                    <div class="data-title">Dades</div>
-                    <div class="data-table" id="data-${node.node_id}">
-                        <div class="empty-state">No hi ha dades</div>
-                    </div>
-                </div>
-                <div class="last-update" id="time-${node.node_id}">
-                    No s'ha actualitzat
-                </div>
-            `;
-
-            container.appendChild(card);
-        }
-
-        function updateNodeCard(nodeData) {
-            const nodeId = nodeData.node_id;
-
-            nodes[nodeId] = {
-                ...nodes[nodeId],
-                ...nodeData,
-                last_update: new Date()
-            };
-
-            const card = document.getElementById(`node-${nodeId}`);
-            if (!card) return;
+            const card = document.getElementById(`node-${data.id}`);
+            if(!card) return;
 
             card.classList.add('updated');
             setTimeout(() => card.classList.remove('updated'), 600);
 
             const stats = card.querySelectorAll('.stat-value');
-            stats[0].textContent = nodeData.data_count;
-            if (nodeData.update_count !== undefined) {
-                stats[1].textContent = nodeData.update_count;
-            }
+            stats[0].textContent = node.data_count;
+            if(stats[1]) stats[1].textContent = node.update_count;
 
-            const dataTable = document.getElementById(`data-${nodeId}`);
-            if (Object.keys(nodeData.data).length === 0) {
+            const dataTable = document.getElementById(`data-${data.id}`);
+            if(!Object.keys(node.data).length) {
                 dataTable.innerHTML = '<div class="empty-state">No hi ha dades</div>';
             } else {
-                dataTable.innerHTML = '';
-                const sortedKeys = Object.keys(nodeData.data).sort((a, b) => parseInt(a) - parseInt(b));
-                sortedKeys.forEach(key => {
-                    const row = document.createElement('div');
-                    row.className = 'data-row';
-                    row.innerHTML = `
-                        <span class="data-key">key=${key}</span>
-                        <span class="data-value">value=${nodeData.data[key]}</span>
-                    `;
-                    dataTable.appendChild(row);
-                });
+                dataTable.innerHTML = Object.keys(node.data).sort((a,b)=>a-b).map(key =>
+                    `<div class="data-row"><span class="data-key">key=${key}</span><span class="data-value">value=${node.data[key]}</span></div>`
+                ).join('');
             }
 
-            const timeEl = document.getElementById(`time-${nodeId}`);
-            timeEl.textContent = `Actualitzat: ${new Date().toLocaleTimeString()}`;
+            document.getElementById(`time-${data.id}`).textContent = `Actualitzat: ${new Date().toLocaleTimeString()}`;
         }
 
         function connectSocket() {
             socket = io();
-
-            socket.on('node_update', (data) => {
-                updateNodeCard(data);
-            });
-
-            socket.on('disconnect', () => {
-                setTimeout(connectSocket, 3000);
-            });
+            socket.on('node_update', updateNodeCard);
+            socket.on('disconnect', () => setTimeout(connectSocket, 3000));
         }
 
         initializeNodes();

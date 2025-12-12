@@ -24,37 +24,37 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x18protos/replication.proto\x12\x0breplication\"+\n\x0bReadRequest\x12\x0b\n\x03key\x18\x01 \x01(\x05\x12\x0f\n\x07node_id\x18\x02 \x01(\t\"?\n\x0cReadResponse\x12\r\n\x05value\x18\x01 \x01(\x05\x12\x0f\n\x07success\x18\x02 \x01(\x08\x12\x0f\n\x07message\x18\x03 \x01(\t\";\n\x0cWriteRequest\x12\x0b\n\x03key\x18\x01 \x01(\x05\x12\r\n\x05value\x18\x02 \x01(\x05\x12\x0f\n\x07node_id\x18\x03 \x01(\t\"1\n\rWriteResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\x0f\n\x07message\x18\x02 \x01(\t\"\x87\x01\n\x10PropagateRequest\x12\x35\n\x04\x64\x61ta\x18\x01 \x03(\x0b\x32\'.replication.PropagateRequest.DataEntry\x12\x0f\n\x07version\x18\x02 \x01(\x05\x1a+\n\tDataEntry\x12\x0b\n\x03key\x18\x01 \x01(\x05\x12\r\n\x05value\x18\x02 \x01(\x05:\x02\x38\x01\"$\n\x11PropagateResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\"\x90\x01\n\x0bSyncRequest\x12\x30\n\x04\x64\x61ta\x18\x01 \x03(\x0b\x32\".replication.SyncRequest.DataEntry\x12\x0f\n\x07version\x18\x02 \x01(\x05\x12\x11\n\tsender_id\x18\x03 \x01(\t\x1a+\n\tDataEntry\x12\x0b\n\x03key\x18\x01 \x01(\x05\x12\r\n\x05value\x18\x02 \x01(\x05:\x02\x38\x01\"\x1f\n\x0cSyncResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x32\xa9\x02\n\x12ReplicationService\x12;\n\x04Read\x12\x18.replication.ReadRequest\x1a\x19.replication.ReadResponse\x12>\n\x05Write\x12\x19.replication.WriteRequest\x1a\x1a.replication.WriteResponse\x12P\n\x0fPropagateUpdate\x12\x1d.replication.PropagateRequest\x1a\x1e.replication.PropagateResponse\x12\x44\n\rSyncCoreNodes\x12\x18.replication.SyncRequest\x1a\x19.replication.SyncResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x18protos/replication.proto\x12\x0breplication\"&\n\x0bReadRequest\x12\x0b\n\x03key\x18\x01 \x01(\x05\x12\n\n\x02id\x18\x02 \x01(\t\"<\n\x0cReadResponse\x12\r\n\x05valor\x18\x01 \x01(\x05\x12\x0b\n\x03\x61\x63k\x18\x02 \x01(\x08\x12\x10\n\x08missatge\x18\x03 \x01(\t\"6\n\x0cWriteRequest\x12\x0b\n\x03key\x18\x01 \x01(\x05\x12\r\n\x05valor\x18\x02 \x01(\x05\x12\n\n\x02id\x18\x03 \x01(\t\".\n\rWriteResponse\x12\x0b\n\x03\x61\x63k\x18\x01 \x01(\x08\x12\x10\n\x08missatge\x18\x02 \x01(\t\"\x9c\x01\n\x1bPropagateOtherLayersRequest\x12@\n\x04\x64\x61ta\x18\x01 \x03(\x0b\x32\x32.replication.PropagateOtherLayersRequest.DataEntry\x12\x0e\n\x06versio\x18\x02 \x01(\x05\x1a+\n\tDataEntry\x12\x0b\n\x03key\x18\x01 \x01(\x05\x12\r\n\x05value\x18\x02 \x01(\x05:\x02\x38\x01\"+\n\x1cPropagateOtherLayersResponse\x12\x0b\n\x03\x61\x63k\x18\x01 \x01(\x08\"\xa9\x01\n\x19PropagateCoreNodesRequest\x12>\n\x04\x64\x61ta\x18\x01 \x03(\x0b\x32\x30.replication.PropagateCoreNodesRequest.DataEntry\x12\x0e\n\x06versio\x18\x02 \x01(\x05\x12\x0f\n\x07id_send\x18\x03 \x01(\t\x1a+\n\tDataEntry\x12\x0b\n\x03key\x18\x01 \x01(\x05\x12\r\n\x05value\x18\x02 \x01(\x05:\x02\x38\x01\")\n\x1aPropagateCoreNodesResponse\x12\x0b\n\x03\x61\x63k\x18\x01 \x01(\x08\x32\xe5\x02\n\x12ReplicationService\x12;\n\x04Read\x12\x18.replication.ReadRequest\x1a\x19.replication.ReadResponse\x12>\n\x05Write\x12\x19.replication.WriteRequest\x1a\x1a.replication.WriteResponse\x12k\n\x14PropagateOtherLayers\x12(.replication.PropagateOtherLayersRequest\x1a).replication.PropagateOtherLayersResponse\x12\x65\n\x12PropagateCoreNodes\x12&.replication.PropagateCoreNodesRequest\x1a\'.replication.PropagateCoreNodesResponseb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'protos.replication_pb2', _globals)
 if not _descriptor._USE_C_DESCRIPTORS:
   DESCRIPTOR._loaded_options = None
-  _globals['_PROPAGATEREQUEST_DATAENTRY']._loaded_options = None
-  _globals['_PROPAGATEREQUEST_DATAENTRY']._serialized_options = b'8\001'
-  _globals['_SYNCREQUEST_DATAENTRY']._loaded_options = None
-  _globals['_SYNCREQUEST_DATAENTRY']._serialized_options = b'8\001'
+  _globals['_PROPAGATEOTHERLAYERSREQUEST_DATAENTRY']._loaded_options = None
+  _globals['_PROPAGATEOTHERLAYERSREQUEST_DATAENTRY']._serialized_options = b'8\001'
+  _globals['_PROPAGATECORENODESREQUEST_DATAENTRY']._loaded_options = None
+  _globals['_PROPAGATECORENODESREQUEST_DATAENTRY']._serialized_options = b'8\001'
   _globals['_READREQUEST']._serialized_start=41
-  _globals['_READREQUEST']._serialized_end=84
-  _globals['_READRESPONSE']._serialized_start=86
-  _globals['_READRESPONSE']._serialized_end=149
-  _globals['_WRITEREQUEST']._serialized_start=151
-  _globals['_WRITEREQUEST']._serialized_end=210
-  _globals['_WRITERESPONSE']._serialized_start=212
-  _globals['_WRITERESPONSE']._serialized_end=261
-  _globals['_PROPAGATEREQUEST']._serialized_start=264
-  _globals['_PROPAGATEREQUEST']._serialized_end=399
-  _globals['_PROPAGATEREQUEST_DATAENTRY']._serialized_start=356
-  _globals['_PROPAGATEREQUEST_DATAENTRY']._serialized_end=399
-  _globals['_PROPAGATERESPONSE']._serialized_start=401
-  _globals['_PROPAGATERESPONSE']._serialized_end=437
-  _globals['_SYNCREQUEST']._serialized_start=440
-  _globals['_SYNCREQUEST']._serialized_end=584
-  _globals['_SYNCREQUEST_DATAENTRY']._serialized_start=356
-  _globals['_SYNCREQUEST_DATAENTRY']._serialized_end=399
-  _globals['_SYNCRESPONSE']._serialized_start=586
-  _globals['_SYNCRESPONSE']._serialized_end=617
-  _globals['_REPLICATIONSERVICE']._serialized_start=620
-  _globals['_REPLICATIONSERVICE']._serialized_end=917
+  _globals['_READREQUEST']._serialized_end=79
+  _globals['_READRESPONSE']._serialized_start=81
+  _globals['_READRESPONSE']._serialized_end=141
+  _globals['_WRITEREQUEST']._serialized_start=143
+  _globals['_WRITEREQUEST']._serialized_end=197
+  _globals['_WRITERESPONSE']._serialized_start=199
+  _globals['_WRITERESPONSE']._serialized_end=245
+  _globals['_PROPAGATEOTHERLAYERSREQUEST']._serialized_start=248
+  _globals['_PROPAGATEOTHERLAYERSREQUEST']._serialized_end=404
+  _globals['_PROPAGATEOTHERLAYERSREQUEST_DATAENTRY']._serialized_start=361
+  _globals['_PROPAGATEOTHERLAYERSREQUEST_DATAENTRY']._serialized_end=404
+  _globals['_PROPAGATEOTHERLAYERSRESPONSE']._serialized_start=406
+  _globals['_PROPAGATEOTHERLAYERSRESPONSE']._serialized_end=449
+  _globals['_PROPAGATECORENODESREQUEST']._serialized_start=452
+  _globals['_PROPAGATECORENODESREQUEST']._serialized_end=621
+  _globals['_PROPAGATECORENODESREQUEST_DATAENTRY']._serialized_start=361
+  _globals['_PROPAGATECORENODESREQUEST_DATAENTRY']._serialized_end=404
+  _globals['_PROPAGATECORENODESRESPONSE']._serialized_start=623
+  _globals['_PROPAGATECORENODESRESPONSE']._serialized_end=664
+  _globals['_REPLICATIONSERVICE']._serialized_start=667
+  _globals['_REPLICATIONSERVICE']._serialized_end=1024
 # @@protoc_insertion_point(module_scope)

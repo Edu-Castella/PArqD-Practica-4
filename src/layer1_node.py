@@ -4,30 +4,25 @@ import threading
 import time
 import sys
 import os
+from protos import replication_pb2, replication_pb2_grpc
+from web import flask_server
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from protos import replication_pb2, replication_pb2_grpc
-
-try:
-    from web import flask_server
-except ImportError:
-    flask_server = None
-
 
 class Layer1Node(replication_pb2_grpc.ReplicationServiceServicer):
-    def __init__(self, node_id, port, layer2_ports, data_dir):
-        self.node_id = node_id
+    def __init__(self, id, port, layer2_ports, data_dir):
+        self.id = id
         self.port = port
         self.layer2_ports = layer2_ports
         self.data = {}
-        self.version = 0
-        self.log_file = os.path.join(data_dir, f"{node_id}_log.txt")
+        self.versio = 0
+        self.log_file = os.path.join(data_dir, f"{id}_log.txt")
         self.server = None
         self.propagation_timer = None
 
         with open(self.log_file, 'w') as f:
-            f.write(f"LOG NODE {node_id}\n")
+            f.write(f"LOG NODE {id}\n")
             f.write(f"Versio 0: BUIT\n")
 
         self.PropagacioTimer()
@@ -36,19 +31,19 @@ class Layer1Node(replication_pb2_grpc.ReplicationServiceServicer):
         key = request.key
         if key in self.data:
             value = self.data[key]
-            return replication_pb2.ReadResponse(value=value, success=True, message="OK")
+            return replication_pb2.ReadResponse(valor=value, ack=True, missatge="OK")
         else:
-            return replication_pb2.ReadResponse(value=0, success=False, message="Key not found")
+            return replication_pb2.ReadResponse(valor=0, ack=False, missatge="Key no trobada")
 
-    def PropagateUpdate(self, request, context):
-        for key, value in request.data.items():
-            self.data[key] = value
+    def PropagateOtherLayers(self, request, context):
+        for key, valor in request.data.items():
+            self.data[key] = valor
 
-        self.version = request.version
+        self.versio = request.versio
 
         self.WriteLog()
 
-        return replication_pb2.PropagateResponse(success=True)
+        return replication_pb2.PropagateOtherLayersResponse(ack=True)
 
     def PropagacioTimer(self):
 
@@ -68,11 +63,11 @@ class Layer1Node(replication_pb2_grpc.ReplicationServiceServicer):
             try:
                 with grpc.insecure_channel(f'localhost:{layer2_port}') as channel:
                     stub = replication_pb2_grpc.ReplicationServiceStub(channel)
-                    request = replication_pb2.PropagateRequest(
+                    request = replication_pb2.PropagateOtherLayersRequest(
                         data=self.data,
-                        version=self.version
+                        versio=self.versio
                     )
-                    response = stub.PropagateUpdate(request, timeout=2)
+                    response = stub.PropagateOtherLayers(request, timeout=2)
             except Exception as e:
                 pass
 
@@ -88,12 +83,12 @@ class Layer1Node(replication_pb2_grpc.ReplicationServiceServicer):
 
     def WriteLog(self):
         with open(self.log_file, 'a') as f:
-            f.write(f"\nVersio {self.version}\n")
+            f.write(f"\nVersio {self.versio}\n")
             if not self.data:
                 f.write("(Buit)\n")
             else:
                 for key in sorted(self.data.keys()):
-                    f.write(f"key={key}, value={self.data[key]}\n")
+                    f.write(f"Key={key}, Valor={self.data[key]}\n")
 
         self.EnviarWeb()
 
@@ -101,10 +96,10 @@ class Layer1Node(replication_pb2_grpc.ReplicationServiceServicer):
         if flask_server:
             data = {
                 'type': 'node_update',
-                'layer': 'layer1',
-                'node_id': self.node_id,
-                'version': self.version,
+                'layer': '1',
+                'id': self.id,
+                'versio': self.versio,
                 'data': {str(k): v for k, v in self.data.items()},
-                'data_count': len(self.data)
+                'count_data': len(self.data)
             }
             flask_server.broadcast(data)

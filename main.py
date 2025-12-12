@@ -11,7 +11,7 @@ from src.layer1_node import Layer1Node
 from src.layer2_node import Layer2Node
 from web import flask_server
 
-def execute_transaction(transaccio, nodes):
+def ExecutarTransaccio(transaccio, nodes):
     transaccio = transaccio.strip()
     if not transaccio:
         return
@@ -35,10 +35,6 @@ def execute_transaction(transaccio, nodes):
         elif layer == 2:
             target_nodes = [nodes['C1'], nodes['C2']]
 
-    if not target_nodes:
-        print("Error: No target nodes found")
-        return
-
     target_node = target_nodes[0]
     port = target_node['port']
 
@@ -50,14 +46,14 @@ def execute_transaction(transaccio, nodes):
             try:
                 with grpc.insecure_channel(f'localhost:{port}') as channel:
                     stub = replication_pb2_grpc.ReplicationServiceStub(channel)
-                    request = replication_pb2.ReadRequest(key=key, node_id=target_node['id'])
+                    request = replication_pb2.ReadRequest(key=key, id=target_node['id'])
                     response = stub.Read(request, timeout=5)
-                    if response.success:
-                        print(f"  READ({key}) = {response.value} from {target_node['id']}")
+                    if response.ack:
+                        print(f"READ({key}) = {response.valor} des de {target_node['id']}")
                     else:
-                        print(f"  READ({key}) FAILED: {response.message}")
+                        print(f"READ({key}) FALLAT: {response.missatge}")
             except Exception as e:
-                print(f"  Error reading from {target_node['id']}: {e}")
+                print(f"Error llegint de {target_node['id']}: {e}")
 
         elif op.startswith('w('):
             parts = op[2:-1].split(',')
@@ -66,24 +62,24 @@ def execute_transaction(transaccio, nodes):
             try:
                 with grpc.insecure_channel(f'localhost:{port}') as channel:
                     stub = replication_pb2_grpc.ReplicationServiceStub(channel)
-                    request = replication_pb2.WriteRequest(key=key, value=value, node_id=target_node['id'])
+                    request = replication_pb2.WriteRequest(key=key, valor=value, id=target_node['id'])
                     response = stub.Write(request, timeout=5)
-                    if response.success:
-                        print(f"  WRITE({key}, {value}) SUCCESS on {target_node['id']}")
+                    if response.ack:
+                        print(f"WRITE({key}, {value}) CORRECTE a {target_node['id']}")
                     else:
-                        print(f"  WRITE FAILED: {response.message}")
+                        print(f"WRITE FALLAT: {response.message}")
             except Exception as e:
-                print(f"  Error writing to {target_node['id']}: {e}")
+                print(f"Error escrivint a {target_node['id']}: {e}")
 
-    print(f"Transaction completed\n")
-    time.sleep(1)
+    print(f"Transacció completada\n")
+    time.sleep(0.5)
 
 
 def main():
     print("Iniciant sistema...")
 
     flask_server.start()
-    time.sleep(2)
+    time.sleep(1)
 
     print("Dashboard: http://localhost:8080")
 
@@ -98,29 +94,29 @@ def main():
     }
 
     print("=== Creant Core Layer ===")
-    node_A1 = CoreNode('A1', ports['A1'], peer_ports=[ports['A2'], ports['A3']], layer1_ports=[], data_dir=LOGS_DIR)
-    node_A2 = CoreNode('A2', ports['A2'], peer_ports=[ports['A1'], ports['A3']], layer1_ports=[ports['B1']], data_dir=LOGS_DIR)
-    node_A3 = CoreNode('A3', ports['A3'], peer_ports=[ports['A1'], ports['A2']], layer1_ports=[ports['B2']], data_dir=LOGS_DIR)
+    node_A1 = CoreNode('A1', ports['A1'], other_ports=[ports['A2'], ports['A3']], layer1_ports=[], data_dir=LOGS_DIR)
+    node_A2 = CoreNode('A2', ports['A2'], other_ports=[ports['A1'], ports['A3']], layer1_ports=[ports['B1']], data_dir=LOGS_DIR)
+    node_A3 = CoreNode('A3', ports['A3'], other_ports=[ports['A1'], ports['A2']], layer1_ports=[ports['B2']], data_dir=LOGS_DIR)
     node_A1.start()
     node_A2.start()
     node_A3.start()
-    time.sleep(1)
+    time.sleep(0.2)
 
-    print("\n=== Creant Layer 1 ===")
+    print("=== Creant Layer 1 ===")
     node_B1 = Layer1Node('B1', ports['B1'], layer2_ports=[], data_dir=LOGS_DIR)
     node_B2 = Layer1Node('B2', ports['B2'], layer2_ports=[ports['C1'], ports['C2']], data_dir=LOGS_DIR)
     node_B1.start()
     node_B2.start()
-    time.sleep(1)
+    time.sleep(0.2)
 
-    print("\n=== Creant Layer 2 ===")
+    print("=== Creant Layer 2 ===")
     node_C1 = Layer2Node('C1', ports['C1'], data_dir=LOGS_DIR)
     node_C2 = Layer2Node('C2', ports['C2'], data_dir=LOGS_DIR)
     node_C1.start()
     node_C2.start()
-    time.sleep(1)
+    time.sleep(0.2)
 
-    print("Nodes creats")
+    print("Nodes creats!!!\n")
 
     nodes = {
         'A1': {'port': ports['A1'], 'id': 'A1', 'node': node_A1},
@@ -132,7 +128,7 @@ def main():
         'C2': {'port': ports['C2'], 'id': 'C2', 'node': node_C2}
     }
 
-    print("Execució de transaccions\n")
+    print("Execució de transaccions:\n")
     time.sleep(2)
 
     transactions_file = os.path.join(LOGS_DIR, 'transactions.txt')
@@ -143,8 +139,8 @@ def main():
 
         for transaction in transactions:
             if transaction.strip():
-                execute_transaction(transaction, nodes)
-                time.sleep(1.5)
+                ExecutarTransaccio(transaction, nodes)
+                time.sleep(0.5)
 
     except FileNotFoundError:
         print("No s'ha trobat data/transactions.txt")

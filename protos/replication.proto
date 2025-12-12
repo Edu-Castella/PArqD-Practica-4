@@ -5,47 +5,47 @@ package replication;
 service ReplicationService {
   rpc Read(ReadRequest) returns (ReadResponse);
   rpc Write(WriteRequest) returns (WriteResponse);
-  rpc PropagateUpdate(PropagateRequest) returns (PropagateResponse);
-  rpc SyncCoreNodes(SyncRequest) returns (SyncResponse);
+  rpc PropagateOtherLayers(PropagateOtherLayersRequest) returns (PropagateOtherLayersResponse);
+  rpc PropagateCoreNodes(PropagateCoreNodesRequest) returns (PropagateCoreNodesResponse);
 }
 
 message ReadRequest {
   int32 key = 1;
-  string node_id = 2;
+  string id = 2;
 }
 
 message ReadResponse {
-  int32 value = 1;
-  bool success = 2;
-  string message = 3;
+  int32 valor = 1;
+  bool ack = 2;
+  string missatge = 3;
 }
 
 message WriteRequest {
   int32 key = 1;
-  int32 value = 2;
-  string node_id = 3;
+  int32 valor = 2;
+  string id = 3;
 }
 
 message WriteResponse {
-  bool success = 1;
-  string message = 2;
+  bool ack = 1;
+  string missatge = 2;
 }
 
-message PropagateRequest {
+message PropagateOtherLayersRequest {
   map<int32, int32> data = 1;
-  int32 version = 2;
+  int32 versio = 2;
 }
 
-message PropagateResponse {
-  bool success = 1;
+message PropagateOtherLayersResponse {
+  bool ack = 1;
 }
 
-message SyncRequest {
+message PropagateCoreNodesRequest {
   map<int32, int32> data = 1;
-  int32 version = 2;
-  string sender_id = 3;
+  int32 versio = 2;
+  string id_send = 3;
 }
 
-message SyncResponse {
-  bool success = 1;
+message PropagateCoreNodesResponse {
+  bool ack = 1;
 }

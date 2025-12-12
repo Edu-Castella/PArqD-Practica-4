@@ -44,15 +44,15 @@ class ReplicationServiceStub(object):
                 request_serializer=protos_dot_replication__pb2.WriteRequest.SerializeToString,
                 response_deserializer=protos_dot_replication__pb2.WriteResponse.FromString,
                 _registered_method=True)
-        self.PropagateUpdate = channel.unary_unary(
-                '/replication.ReplicationService/PropagateUpdate',
-                request_serializer=protos_dot_replication__pb2.PropagateRequest.SerializeToString,
-                response_deserializer=protos_dot_replication__pb2.PropagateResponse.FromString,
+        self.PropagateOtherLayers = channel.unary_unary(
+                '/replication.ReplicationService/PropagateOtherLayers',
+                request_serializer=protos_dot_replication__pb2.PropagateOtherLayersRequest.SerializeToString,
+                response_deserializer=protos_dot_replication__pb2.PropagateOtherLayersResponse.FromString,
                 _registered_method=True)
-        self.SyncCoreNodes = channel.unary_unary(
-                '/replication.ReplicationService/SyncCoreNodes',
-                request_serializer=protos_dot_replication__pb2.SyncRequest.SerializeToString,
-                response_deserializer=protos_dot_replication__pb2.SyncResponse.FromString,
+        self.PropagateCoreNodes = channel.unary_unary(
+                '/replication.ReplicationService/PropagateCoreNodes',
+                request_serializer=protos_dot_replication__pb2.PropagateCoreNodesRequest.SerializeToString,
+                response_deserializer=protos_dot_replication__pb2.PropagateCoreNodesResponse.FromString,
                 _registered_method=True)
 
 
@@ -71,13 +71,13 @@ class ReplicationServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def PropagateUpdate(self, request, context):
+    def PropagateOtherLayers(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def SyncCoreNodes(self, request, context):
+    def PropagateCoreNodes(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -96,15 +96,15 @@ def add_ReplicationServiceServicer_to_server(servicer, server):
                     request_deserializer=protos_dot_replication__pb2.WriteRequest.FromString,
                     response_serializer=protos_dot_replication__pb2.WriteResponse.SerializeToString,
             ),
-            'PropagateUpdate': grpc.unary_unary_rpc_method_handler(
-                    servicer.PropagateUpdate,
-                    request_deserializer=protos_dot_replication__pb2.PropagateRequest.FromString,
-                    response_serializer=protos_dot_replication__pb2.PropagateResponse.SerializeToString,
+            'PropagateOtherLayers': grpc.unary_unary_rpc_method_handler(
+                    servicer.PropagateOtherLayers,
+                    request_deserializer=protos_dot_replication__pb2.PropagateOtherLayersRequest.FromString,
+                    response_serializer=protos_dot_replication__pb2.PropagateOtherLayersResponse.SerializeToString,
             ),
-            'SyncCoreNodes': grpc.unary_unary_rpc_method_handler(
-                    servicer.SyncCoreNodes,
-                    request_deserializer=protos_dot_replication__pb2.SyncRequest.FromString,
-                    response_serializer=protos_dot_replication__pb2.SyncResponse.SerializeToString,
+            'PropagateCoreNodes': grpc.unary_unary_rpc_method_handler(
+                    servicer.PropagateCoreNodes,
+                    request_deserializer=protos_dot_replication__pb2.PropagateCoreNodesRequest.FromString,
+                    response_serializer=protos_dot_replication__pb2.PropagateCoreNodesResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -172,7 +172,7 @@ class ReplicationService(object):
             _registered_method=True)
 
     @staticmethod
-    def PropagateUpdate(request,
+    def PropagateOtherLayers(request,
             target,
             options=(),
             channel_credentials=None,
@@ -185,9 +185,9 @@ class ReplicationService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/replication.ReplicationService/PropagateUpdate',
-            protos_dot_replication__pb2.PropagateRequest.SerializeToString,
-            protos_dot_replication__pb2.PropagateResponse.FromString,
+            '/replication.ReplicationService/PropagateOtherLayers',
+            protos_dot_replication__pb2.PropagateOtherLayersRequest.SerializeToString,
+            protos_dot_replication__pb2.PropagateOtherLayersResponse.FromString,
             options,
             channel_credentials,
             insecure,
@@ -199,7 +199,7 @@ class ReplicationService(object):
             _registered_method=True)
 
     @staticmethod
-    def SyncCoreNodes(request,
+    def PropagateCoreNodes(request,
             target,
             options=(),
             channel_credentials=None,
@@ -212,9 +212,9 @@ class ReplicationService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/replication.ReplicationService/SyncCoreNodes',
-            protos_dot_replication__pb2.SyncRequest.SerializeToString,
-            protos_dot_replication__pb2.SyncResponse.FromString,
+            '/replication.ReplicationService/PropagateCoreNodes',
+            protos_dot_replication__pb2.PropagateCoreNodesRequest.SerializeToString,
+            protos_dot_replication__pb2.PropagateCoreNodesResponse.FromString,
             options,
             channel_credentials,
             insecure,
