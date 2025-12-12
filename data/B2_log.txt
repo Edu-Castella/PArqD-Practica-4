@@ -33,5 +33,3 @@ Key=170, Valor=1700
 Key=180, Valor=1800
 Key=190, Valor=1900
 Key=200, Valor=2000
-
-
